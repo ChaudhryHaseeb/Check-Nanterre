@@ -5,9 +5,10 @@ source /home/vagrant/.bashrc
 
 echo "-----updates-----"
 apt-get -y install ifupdown
-sudo apt-get update
+apt-get -y update
 apt-get -y upgrade
 apt-get -y install python3-pip
+apt-get -y install postgresql postgresql-contrib
 
 # Installation des dépendances python
 echo "-----Install depedances-----"
