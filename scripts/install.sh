@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-export DJANGO_DIR=/vagrant >> /home/vagrant/.bashrc
+sed -i.bak -e '6,9d;' /home/vagrant/.bashrc
+echo export DJANGO_DIR=/vagrant >> /home/vagrant/.bashrc
 source /home/vagrant/.bashrc
 
 echo "-----updates-----"
