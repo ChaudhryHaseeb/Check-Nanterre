@@ -1,7 +1,7 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/bionic64"
   config.vm.hostname = "checkNanterre"
-  config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 8000, host: 8000
   config.vm.provider "virtualbox" do |vb|
       vb.name = "check_nanterre_server"
       vb.memory = "1024"
