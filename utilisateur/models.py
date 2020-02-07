@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 
 
 class Utilisateur(models.Model):
-    # Lien entre l'etudiant et le modele User de django
+    """
+    Lien entre l'etudiant et le modele User de django
+    """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     ETU = 'Etudiant'
     PROF = 'Professeur'
