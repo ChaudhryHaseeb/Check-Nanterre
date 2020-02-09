@@ -7,6 +7,10 @@ from utilisateur.forms import CreerEtudiant, CreerProfesseur
 from utilisateur.models import Utilisateur
 
 
+def index(request):
+    return render(request, 'index.html', {})
+
+
 def creerEtudiant(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -26,7 +30,7 @@ def creerEtudiant(request):
     else:
         form = CreerEtudiant()
 
-    return render(request, 'creerEtudiant.html', {'form': form})
+    return render(request, 'utilisateur/creerEtudiant.html', {'form': form})
 
 
 def creerProfesseur(request):
@@ -47,4 +51,4 @@ def creerProfesseur(request):
     else:
         form = CreerProfesseur()
 
-    return render(request, 'creerProfesseur.html', {'form': form})
+    return render(request, 'utilisateur/creerProfesseur.html', {'form': form})
