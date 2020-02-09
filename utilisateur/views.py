@@ -8,21 +8,22 @@ from utilisateur.models import Utilisateur
 
 
 def creerEtudiant(request):
-    # if this is a POST request we need to process the form data
+    # Si POST, on traite le formulaire
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = CreerEtudiant(request.POST)
-        # check whether it's valid:
+        # Check validite du formulaire
         if form.is_valid():
             prenom = request.POST.get('prenom', '')
             nom = request.POST.get('nom', '')
             email = request.POST.get('email', '')
             numero = request.POST.get('numero', '')
-            user = User.objects.create_user(username=numero, password="azerty", first_name=prenom, last_name=nom, email=email)
+            # password = User.objects.make_random_password()
+            password = 'azerty'
+            user = User.objects.create_user(username=numero, password=password, first_name=prenom, last_name=nom, email=email)
             Utilisateur.objects.create(user=user, role="Etudiant")
             return HttpResponseRedirect("Bien vu")
 
-    # if a GET (or any other method) we'll create a blank form
+    # Si GET, on affiche la page pour remplir le formulaire
     else:
         form = CreerEtudiant()
 
@@ -30,20 +31,21 @@ def creerEtudiant(request):
 
 
 def creerProfesseur(request):
-    # if this is a POST request we need to process the form data
+    # Si POST, on traite le formulaire
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = CreerProfesseur(request.POST)
-        # check whether it's valid:
+        # Check validite du formulaire
         if form.is_valid():
             prenom = request.POST.get('prenom', '')
             nom = request.POST.get('nom', '')
             email = request.POST.get('email', '')
-            user = User.objects.create_user(username=email, password="azerty", first_name=prenom, last_name=nom, email=email)
+            # password = User.objects.make_random_password()
+            password = 'azerty'
+            user = User.objects.create_user(username=email, password=password, first_name=prenom, last_name=nom, email=email)
             Utilisateur.objects.create(user=user, role="Professeur")
             return HttpResponseRedirect("Bien vu")
 
-    # if a GET (or any other method) we'll create a blank form
+    # Si GET, on affiche la page pour remplir le formulaire
     else:
         form = CreerProfesseur()
 
