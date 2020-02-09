@@ -7,6 +7,10 @@ from utilisateur.forms import CreerEtudiant, CreerProfesseur
 from utilisateur.models import Utilisateur
 
 
+def index(request):
+    return render(request, 'index.html', {})
+
+
 def creerEtudiant(request):
     # Si POST, on traite le formulaire
     if request.method == 'POST':
