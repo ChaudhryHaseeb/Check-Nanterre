@@ -24,7 +24,7 @@ def verifSecretaire(user):
 
 
 def index(request):
-    return render(request, 'index.html', {})
+    return render(request, 'utilisateur/login.html', {})
 
 
 def connexion(request):
