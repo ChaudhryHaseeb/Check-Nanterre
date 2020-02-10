@@ -1,16 +1,54 @@
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
-from utilisateur.forms import CreerEtudiant, CreerProfesseur
+from django.urls import reverse
+
+from utilisateur.forms import CreerEtudiant, CreerProfesseur, ConnexionForm
 from utilisateur.models import Utilisateur
+
+
+def verifSecretaire(user):
+    try:
+        uti = Utilisateur.objects.get(user=user)
+        if uti.role == 'Secretaire':
+            return True
+        else:
+            return False
+    except:
+        return False
 
 
 def index(request):
     return render(request, 'index.html', {})
 
 
+def connexion(request):
+    # Redirection si le user est connecté
+    if request.method == "POST":
+        form = ConnexionForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+            user = authenticate(username=username, password=password)
+            if user:  # si l'objet retourne n'est pas None
+                if Utilisateur.objects.get(user=user).role == 'Secretaire':
+                    login(request, user)
+                    return render(request, 'index.html')
+    else:
+        form = ConnexionForm()
+    if request.user.is_authenticated:
+        return render(request, 'index.html')
+    else:
+        return render(request, 'utilisateur/connexion.html', {'form': form})
+
+
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verifSecretaire, login_url=index)
 def creerEtudiant(request):
     # Si POST, on traite le formulaire
     if request.method == 'POST':
@@ -23,7 +61,8 @@ def creerEtudiant(request):
             numero = request.POST.get('numero', '')
             # password = User.objects.make_random_password()
             password = 'azerty'
-            user = User.objects.create_user(username=numero, password=password, first_name=prenom, last_name=nom, email=email)
+            user = User.objects.create_user(username=numero, password=password, first_name=prenom, last_name=nom,
+                                            email=email)
             Utilisateur.objects.create(user=user, role="Etudiant")
             return HttpResponseRedirect("Bien vu")
 
@@ -34,6 +73,8 @@ def creerEtudiant(request):
     return render(request, 'utilisateur/creerEtudiant.html', {'form': form})
 
 
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verifSecretaire, login_url=index)
 def creerProfesseur(request):
     # Si POST, on traite le formulaire
     if request.method == 'POST':
@@ -45,7 +86,8 @@ def creerProfesseur(request):
             email = request.POST.get('email', '')
             # password = User.objects.make_random_password()
             password = 'azerty'
-            user = User.objects.create_user(username=email, password=password, first_name=prenom, last_name=nom, email=email)
+            user = User.objects.create_user(username=email, password=password, first_name=prenom, last_name=nom,
+                                            email=email)
             Utilisateur.objects.create(user=user, role="Professeur")
             return HttpResponseRedirect("Bien vu")
 
@@ -54,3 +96,4 @@ def creerProfesseur(request):
         form = CreerProfesseur()
 
     return render(request, 'utilisateur/creerProfesseur.html', {'form': form})
+
