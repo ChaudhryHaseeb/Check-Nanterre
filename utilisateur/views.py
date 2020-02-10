@@ -22,9 +22,10 @@ def verifSecretaire(user):
     except:
         return False
 
-
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verifSecretaire, login_url="/utilisateur/deconnexion")
 def index(request):
-    return render(request, 'utilisateur/login.html', {})
+    return render(request, 'index.html', {})
 
 
 def connexion(request):
@@ -48,7 +49,7 @@ def connexion(request):
 
 
 @login_required(login_url="/utilisateur/connexion")
-@user_passes_test(verifSecretaire, login_url=index)
+@user_passes_test(verifSecretaire, login_url="/utilisateur/deconnexion")
 def creerEtudiant(request):
     # Si POST, on traite le formulaire
     if request.method == 'POST':
@@ -74,7 +75,7 @@ def creerEtudiant(request):
 
 
 @login_required(login_url="/utilisateur/connexion")
-@user_passes_test(verifSecretaire, login_url=index)
+@user_passes_test(verifSecretaire, login_url="/utilisateur/deconnexion")
 def creerProfesseur(request):
     # Si POST, on traite le formulaire
     if request.method == 'POST':
