@@ -3,10 +3,10 @@ from django.contrib.auth.forms import AuthenticationForm
 
 
 class ConnexionForm(forms.Form):
-    username = forms.CharField(label="username", max_length=150,
+    username = forms.CharField(label="Email", max_length=150,
                                widget=forms.TextInput(attrs={'class': 'form-control', 'name': 'username',
                                                              'placeholder': 'Email'}))
-    password = forms.CharField(label="password", max_length=30,
+    password = forms.CharField(label="Mot de passe", max_length=30,
                                widget=forms.PasswordInput(attrs={'class': 'form-control', 'name': 'password',
                                                                  'placeholder': 'Mot de passe'}))
 
