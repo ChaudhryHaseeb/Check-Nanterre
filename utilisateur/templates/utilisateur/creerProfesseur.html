@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1 class="ml-2 mt-3 pageheader-title"> Créer un professeur</h1>
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-danger"><strong>{{msg}}</strong></div>
+        {% endfor %}
+    {% endif %}
     <form action="/utilisateur/professeur/creation" method="post" class="ml-5 mr-5 mb-5">
        {% csrf_token %}
         {{ form }}

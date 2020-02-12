@@ -19,9 +19,6 @@ class CreerEtudiant(forms.Form):
                           widget=forms.TextInput(attrs={'class': 'form-control', 'pattern': '[A-Za-z-]+$',
                                                         'placeholder': 'Nom'}))
 
-    email = forms.EmailField(label=('Email'), widget=forms.EmailInput(attrs={'class': 'form-control',
-                                                                              'placeholder': 'Email'}))
-
     numero = forms.CharField(label=('Numéro étudiant'), max_length=8, required=False,
                              widget=forms.TextInput(attrs={'class': 'form-control', 'pattern': '[0-9]+$',
                                                            'placeholder': 'Numéro étudiant'}))
