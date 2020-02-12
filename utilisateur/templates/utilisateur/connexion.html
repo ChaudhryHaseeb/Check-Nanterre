@@ -10,16 +10,44 @@
     <link href="{% static "/assets/vendor/fonts/circular-std/style.css" %}" rel="stylesheet">
     <link rel="stylesheet" href={% static "assets/libs/css/style.css" %}>
     <link rel="stylesheet" href={% static "assets/vendor/fonts/fontawesome/css/fontawesome-all.css" %}>
+    <link rel="stylesheet" href={% static "assets/vendor/charts/chartist-bundle/chartist.css" %}>
+    <link rel="stylesheet" href={% static "assets/vendor/charts/morris-bundle/morris.css" %}>
+    <link rel="stylesheet" href={% static "assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css" %}>
+    <link rel="stylesheet" href={% static "assets/vendor/charts/c3charts/c3.css" %}>
+    <link rel="stylesheet" href={% static "assets/vendor/fonts/flag-icon-css/flag-icon.min.css" %}>
     <title>Check Nanterre</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
+    </style>
 </head>
 
 
 <body>
-    <form action="/utilisateur/connexion" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Connexion">
-    </form>
+    <div class="splash-container">
+        <div class="card ">
+            <div class="card-header text-center"><img class="logo-img w-25" src="{% static "assets/images/logo_nanterre.png" %}" alt="logo"></div>
+            <div class="card-body">
+                <form action="/utilisateur/connexion" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <br>
+                    <input type="submit" class="btn btn-primary btn-lg btn-block" value="Connexion">
+                </form>
+            </div>
+        </div>
+    </div>
 
 
  <!-- Optional JavaScript -->
@@ -31,5 +59,17 @@
     <script src=" {% static "assets/vendor/slimscroll/jquery.slimscroll.js" %}"></script>
     <!-- main js -->
     <script src=" {% static "assets/libs/js/main-js.js" %}"></script>
+    <!-- chart chartist js -->
+    <script src=" {% static "assets/vendor/charts/chartist-bundle/chartist.min.js" %}"></script>
+    <!-- sparkline js -->
+    <script src=" {% static "assets/vendor/charts/sparkline/jquery.sparkline.js" %}"></script>
+    <!-- morris js -->
+    <script src=" {% static "assets/vendor/charts/morris-bundle/raphael.min.js" %}"></script>
+    <script src=" {% static "assets/vendor/charts/morris-bundle/morris.js" %}"></script>
+    <!-- chart c3 js -->
+    <script src=" {% static "assets/vendor/charts/c3charts/c3.min.js" %}"></script>
+    <script src=" {% static "assets/vendor/charts/c3charts/d3-5.4.0.min.js" %}"></script>
+    <script src=" {% static "assets/vendor/charts/c3charts/C3chartjs.js" %}"></script>
+    <script src=" {% static "assets/libs/js/dashboard-ecommerce.js" %}"></script>
 </body>
 </html>

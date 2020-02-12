@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">Créer une matière</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <form action="{% url 'creer_matiere' %}" method="post">
+                        {% csrf_token %}
+                        {{ form }}
+                        <br>
+                        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Créer la matière">
+                    </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
