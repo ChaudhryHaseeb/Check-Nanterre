@@ -127,3 +127,9 @@ LOGOUT_REDIRECT_URL = '/utilisateur/connexion'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static/")]
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'check.nanterre@gmail.com'
+EMAIL_HOST_PASSWORD = 'Ch3kNan773r'
+EMAIL_USE_TLS = True

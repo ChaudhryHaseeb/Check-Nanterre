@@ -45,17 +45,12 @@
                 {% endfor %}
             {% endif %}
 
-                <form action="/utilisateur/connexion" method="post">
+                <form action="/utilisateur/motdepasse/oublie" method="post">
                     {% csrf_token %}
                     {{ form }}
                     <br>
-                    <input type="submit" class="btn btn-primary btn-lg btn-block" value="Connexion">
+                    <input type="submit" class="btn btn-primary btn-lg btn-block" value="Réinitialiser">
                 </form>
-            </div>
-            <div class="card-footer bg-white p-0  ">
-                <div class="card-footer-item card-footer-item-bordered">
-                    <a href="{% url 'mdpOublie' %}" class="footer-link">Mot de passe oublié</a>
-                </div>
             </div>
         </div>
     </div>

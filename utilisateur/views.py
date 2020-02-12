@@ -7,9 +7,10 @@ from django.shortcuts import render
 # Create your views here.
 from django.urls import reverse
 
-from utilisateur.forms import CreerEtudiant, CreerProfesseur, ConnexionForm
+from utilisateur.forms import CreerEtudiant, CreerProfesseur, ConnexionForm, MdpOublie
 from utilisateur.models import Utilisateur
 from django.contrib import messages
+from django.core.mail import send_mail
 
 
 def verifSecretaire(user):
@@ -22,9 +23,14 @@ def verifSecretaire(user):
     except:
         return False
 
+
 @login_required(login_url="/utilisateur/connexion")
 @user_passes_test(verifSecretaire, login_url="/utilisateur/deconnexion")
 def index(request):
+    #send_mail('Check_Nanterre : Mail test',
+    #          'Mail envoyé depuis Django',
+    #          'check.nanterre@gmail.com',
+    #          ['haseeb.chaudhry@hotmail.fr'])
     return render(request, 'index.html', {})
 
 
@@ -50,6 +56,32 @@ def connexion(request):
         return render(request, 'index.html')
     else:
         return render(request, 'utilisateur/connexion.html', {'form': form})
+
+
+def mdpOublie(request):
+    if request.method == 'POST':
+        form = MdpOublie(request.POST)
+        # Check validite du formulaire
+        if form.is_valid():
+            email = request.POST.get('email', '')
+            password = User.objects.make_random_password()
+            try:
+                # Change mail
+                u = User.objects.get(email=email)
+                u.set_password(password)
+                u.save()
+                # Envoi du nouveau mdp par mail
+                send_mail('Check_Nanterre : votre nouveau mot de passe',
+                          'Bonjour, voici votre nouveau mot de passe pour le site Check_Nanterre : ' +password,
+                          'check.nanterre@gmail.com',
+                          [email])
+                return HttpResponseRedirect('/utilisateur/connexion')
+            except:
+                messages.error(request, "Email inconnu")
+    # Si GET, on affiche la page pour remplir le formulaire
+    else:
+        form = MdpOublie()
+    return render(request, 'utilisateur/mdpOublie.html', {'form': form})
 
 
 @login_required(login_url="/utilisateur/connexion")
