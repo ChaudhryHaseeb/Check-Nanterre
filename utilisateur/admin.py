@@ -1,8 +1,10 @@
 from django.contrib import admin
-from .models import Etudiant
 
-class EtudiantAdmin(admin.ModelAdmin):
-    fields = ['user', 'numero_etudiant']
-    list_display = ('user', 'numero_etudiant')
+from utilisateur.models import Utilisateur
 
-admin.site.register(Etudiant, EtudiantAdmin)
+
+class UtilisateurAdmin(admin.ModelAdmin):
+    fields = ['user', 'role']
+    list_display = ('user', 'role')
+
+admin.site.register(Utilisateur, UtilisateurAdmin)
