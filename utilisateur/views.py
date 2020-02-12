@@ -6,11 +6,14 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.urls import reverse
+from rest_framework import viewsets, permissions
 
 from utilisateur.forms import CreerEtudiant, CreerProfesseur, ConnexionForm, MdpOublie
 from utilisateur.models import Utilisateur
 from django.contrib import messages
 from django.core.mail import send_mail
+
+from utilisateur.serializers import UserSerializer, UtilisateurSerializer
 
 
 def verifSecretaire(user):
@@ -27,7 +30,7 @@ def verifSecretaire(user):
 @login_required(login_url="/utilisateur/connexion")
 @user_passes_test(verifSecretaire, login_url="/utilisateur/deconnexion")
 def index(request):
-    #send_mail('Check_Nanterre : Mail test',
+    # send_mail('Check_Nanterre : Mail test',
     #          'Mail envoyé depuis Django',
     #          'check.nanterre@gmail.com',
     #          ['haseeb.chaudhry@hotmail.fr'])
@@ -72,7 +75,7 @@ def mdpOublie(request):
                 u.save()
                 # Envoi du nouveau mdp par mail
                 send_mail('Check_Nanterre : votre nouveau mot de passe',
-                          'Bonjour, voici votre nouveau mot de passe pour le site Check_Nanterre : ' +password,
+                          'Bonjour, voici votre nouveau mot de passe pour le site Check_Nanterre : ' + password,
                           'check.nanterre@gmail.com',
                           [email])
                 return HttpResponseRedirect('/utilisateur/connexion')
@@ -96,7 +99,7 @@ def creerEtudiant(request):
             nom = request.POST.get('nom', '')
             numero = request.POST.get('numero', '')
             # password = User.objects.make_random_password()
-            email = numero+"@parisnanterre.fr"
+            email = numero + "@parisnanterre.fr"
             password = 'azerty'
             try:
                 user = User.objects.create_user(username=numero, password=password, first_name=prenom, last_name=nom,
@@ -138,4 +141,16 @@ def creerProfesseur(request):
         form = CreerProfesseur()
 
     return render(request, 'utilisateur/creerProfesseur.html', {'form': form})
+
+
+########################
+###### Pour l'API ######
+########################
+class EtudiantViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Utilisateur.objects.all().filter(role='Etudiant')
+    serializer_class = UtilisateurSerializer
+    permission_classes = (permissions.AllowAny,)
 

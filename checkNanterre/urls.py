@@ -16,10 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from utilisateur import views
+from rest_framework import routers
+
+# Pour l'API
+router = routers.DefaultRouter()
+router.register(r'api/etudiant', views.EtudiantViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('utilisateur/', include('utilisateur.urls')),
     path('admin/', admin.site.urls),
     path('absence/', include('absence.urls')),
+    #Pour l'API
+    path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
