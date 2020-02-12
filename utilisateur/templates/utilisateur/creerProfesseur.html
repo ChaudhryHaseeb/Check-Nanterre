@@ -1,14 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Creer un professeur</title>
-</head>
-<body>
-    <form action="/utilisateur/professeur/creation" method="post">
-        {% csrf_token %}
+{% extends 'base.html' %}
+{% block content %}
+    <h1 class="ml-2 mt-3 pageheader-title"> Créer un professeur</h1>
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-danger"><strong>{{msg}}</strong></div>
+        {% endfor %}
+    {% endif %}
+    <form action="/utilisateur/professeur/creation" method="post" class="ml-5 mr-5 mb-5">
+       {% csrf_token %}
         {{ form }}
-    <input type="submit" value="Valider">
+        <input type="submit" class="btn btn-primary mt-5" value="Valider">
+    </form>
 
-</body>
-</html>
+{% endblock %}

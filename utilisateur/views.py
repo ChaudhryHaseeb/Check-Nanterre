@@ -9,6 +9,7 @@ from django.urls import reverse
 
 from utilisateur.forms import CreerEtudiant, CreerProfesseur, ConnexionForm
 from utilisateur.models import Utilisateur
+from django.contrib import messages
 
 
 def verifSecretaire(user):
@@ -39,6 +40,10 @@ def connexion(request):
                 if Utilisateur.objects.get(user=user).role == 'Secretaire':
                     login(request, user)
                     return render(request, 'index.html')
+                else:
+                    messages.error(request, "Seul les secretaire peuvent se connecter")
+            else:
+                messages.error(request, "Email ou mot de passe incorrect")
     else:
         form = ConnexionForm()
     if request.user.is_authenticated:
@@ -57,19 +62,21 @@ def creerEtudiant(request):
         if form.is_valid():
             prenom = request.POST.get('prenom', '')
             nom = request.POST.get('nom', '')
-            email = request.POST.get('email', '')
             numero = request.POST.get('numero', '')
             # password = User.objects.make_random_password()
+            email = numero+"@parisnanterre.fr"
             password = 'azerty'
-            user = User.objects.create_user(username=numero, password=password, first_name=prenom, last_name=nom,
-                                            email=email)
-            Utilisateur.objects.create(user=user, role="Etudiant")
-            return HttpResponseRedirect("Bien vu")
+            try:
+                user = User.objects.create_user(username=numero, password=password, first_name=prenom, last_name=nom,
+                                                email=email)
+                Utilisateur.objects.create(user=user, role="Etudiant")
+                return HttpResponseRedirect("Bien vu")
+            except:
+                messages.error(request, "Numéro étudiant indisponible")
 
     # Si GET, on affiche la page pour remplir le formulaire
     else:
         form = CreerEtudiant()
-
     return render(request, 'utilisateur/creerEtudiant.html', {'form': form})
 
 
@@ -86,10 +93,13 @@ def creerProfesseur(request):
             email = request.POST.get('email', '')
             # password = User.objects.make_random_password()
             password = 'azerty'
-            user = User.objects.create_user(username=email, password=password, first_name=prenom, last_name=nom,
-                                            email=email)
-            Utilisateur.objects.create(user=user, role="Professeur")
-            return HttpResponseRedirect("Bien vu")
+            try:
+                user = User.objects.create_user(username=email, password=password, first_name=prenom, last_name=nom,
+                                                email=email)
+                Utilisateur.objects.create(user=user, role="Professeur")
+                return HttpResponseRedirect("Bien vu")
+            except:
+                messages.error(request, "Email indisponible")
 
     # Si GET, on affiche la page pour remplir le formulaire
     else:

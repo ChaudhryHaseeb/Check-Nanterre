@@ -39,6 +39,12 @@
         <div class="card ">
             <div class="card-header text-center"><img class="logo-img w-25" src="{% static "assets/images/logo_nanterre.png" %}" alt="logo"></div>
             <div class="card-body">
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="alert alert-danger"><strong>{{msg}}</strong></div>
+                {% endfor %}
+            {% endif %}
+
                 <form action="/utilisateur/connexion" method="post">
                     {% csrf_token %}
                     {{ form }}
@@ -48,6 +54,7 @@
             </div>
         </div>
     </div>
+
 
 
  <!-- Optional JavaScript -->
