@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from utilisateur.models import Utilisateur
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -11,6 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UtilisateurSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializer(required=True)
+
     class Meta:
         model = Utilisateur
         fields = ['user']

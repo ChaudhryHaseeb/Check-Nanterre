@@ -5,15 +5,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
-from django.urls import reverse
-from rest_framework import viewsets, permissions
+
 
 from utilisateur.forms import CreerEtudiant, CreerProfesseur, ConnexionForm, MdpOublie
 from utilisateur.models import Utilisateur
 from django.contrib import messages
 from django.core.mail import send_mail
-
-from utilisateur.serializers import UserSerializer, UtilisateurSerializer
 
 
 def verifSecretaire(user):
@@ -141,16 +138,3 @@ def creerProfesseur(request):
         form = CreerProfesseur()
 
     return render(request, 'utilisateur/creerProfesseur.html', {'form': form})
-
-
-########################
-###### Pour l'API ######
-########################
-class EtudiantViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = Utilisateur.objects.all().filter(role='Etudiant')
-    serializer_class = UtilisateurSerializer
-    permission_classes = (permissions.AllowAny,)
-
