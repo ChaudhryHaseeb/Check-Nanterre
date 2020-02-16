@@ -15,4 +15,4 @@ class UtilisateurSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Utilisateur
-        fields = ['user']
+        fields = ['role', 'user']

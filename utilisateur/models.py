@@ -25,6 +25,8 @@ class Utilisateur(models.Model):
     def __str__(self):
         return self.user.first_name + " " + self.user.last_name
 
+
+# Permet de créer un token pour l'api à chaque inscription
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender,instance=None,created=False,**kwargs):
     if created:

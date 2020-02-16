@@ -10,10 +10,9 @@ from utilisateur.models import Utilisateur
 
 # Permet de récupérer l'utilisateur associé à un token
 @api_view(['GET', ])
-def user_with_token(request):
+def user_connecte(request):
     try:
-        user= User.objects.get(username='sec@mail.com')
-        utilisateur = Utilisateur.objects.get(user=user)
+        utilisateur = Utilisateur.objects.get(user=request.user)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
