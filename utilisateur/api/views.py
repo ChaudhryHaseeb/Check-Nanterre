@@ -1,7 +1,8 @@
 from django.core.mail import send_mail
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 
@@ -11,6 +12,7 @@ from utilisateur.models import Utilisateur
 
 # Permet de récupérer l'utilisateur associé à un token
 @api_view(['GET', ])
+@permission_classes([IsAuthenticated])
 def user_connecte(request):
     try:
         utilisateur = Utilisateur.objects.get(user=request.user)
@@ -23,6 +25,7 @@ def user_connecte(request):
 
 
 @api_view(['PUT',])
+@permission_classes([IsAuthenticated])
 def user_modifier_mdp(request):
     try:
         user = request.user

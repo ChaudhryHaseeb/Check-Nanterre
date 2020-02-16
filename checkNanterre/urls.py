@@ -26,5 +26,6 @@ urlpatterns = [
     path('absence/', include('absence.urls')),
     #Pour l'API
     path('api/utilisateur/', include('utilisateur.api.urls', 'utilisateur_api')),
+    path('api/absence/', include('absence.api.urls', 'absence_api')),
 
 ]
