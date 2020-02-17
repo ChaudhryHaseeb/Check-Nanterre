@@ -7,7 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from absence.api.serializers import PromotionSerializer, AbsenceSeanceSerializer
-from absence.models import Promotion, PromotionEtudiants, AbsenceEtudiants, AbsenceSeance, Absence
+from absence.models import Promotion, PromotionEtudiants, AbsenceEtudiants, AbsenceSeance, Absence, Seance, \
+    SeancePromotion, SeanceProfesseur, SeanceMatiere, Matiere
 from utilisateur.api.serializers import UtilisateurSerializer
 from utilisateur.models import Utilisateur
 
@@ -79,6 +80,30 @@ def absence_etudiant_justifier(request, id):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def seance_creation(request):
+    try:
+        util = Utilisateur.objects.get(user=request.user)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "POST":
+        if util.role != "Professeur":
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        data = {}
+        try:
+            seance = Seance.objects.create(date_seance=request.data["date"], heure_deb=request.data["heure_deb"],
+                                           heure_fin=request.data["heure_fin"])
+            promo = Promotion.objects.get(id=request.data["id_promo"])
+            SeancePromotion.objects.create(seance_promotion=seance, promotion=promo)
+            SeanceProfesseur.objects.create(seance_professeur=seance, professeur=util)
+            matiere = Matiere.objects.get(id=request.data["id_matiere"])
+            SeanceMatiere.objects.create(seance_matiere=seance, matiere=matiere)
+            data["success"] = "create successful"
+            return Response(data=data)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 
