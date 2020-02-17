@@ -2,18 +2,19 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
+from django.urls import reverse
 
-
+from absence.models import Promotion, PromotionEtudiants
 from utilisateur.forms import CreerEtudiant, CreerProfesseur, ConnexionForm, MdpOublie
 from utilisateur.models import Utilisateur
 from django.contrib import messages
 from django.core.mail import send_mail
 
 
-def verifSecretaire(user):
+def verif_secretaire(user):
     try:
         uti = Utilisateur.objects.get(user=user)
         if uti.role == 'Secretaire':
@@ -25,7 +26,7 @@ def verifSecretaire(user):
 
 
 @login_required(login_url="/utilisateur/connexion")
-@user_passes_test(verifSecretaire, login_url="/utilisateur/deconnexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
 def index(request):
     # send_mail('Check_Nanterre : Mail test',
     #          'Mail envoyé depuis Django',
@@ -58,7 +59,7 @@ def connexion(request):
         return render(request, 'utilisateur/connexion.html', {'form': form})
 
 
-def mdpOublie(request):
+def mdp_oublie(request):
     if request.method == 'POST':
         form = MdpOublie(request.POST)
         # Check validite du formulaire
@@ -75,7 +76,7 @@ def mdpOublie(request):
                           'Bonjour, voici votre nouveau mot de passe pour le site Check_Nanterre : ' + password,
                           'check.nanterre@gmail.com',
                           [email])
-                return HttpResponseRedirect('/utilisateur/connexion')
+                return HttpResponseRedirect(reverse('connexion'))
             except:
                 messages.error(request, "Email inconnu")
     # Si GET, on affiche la page pour remplir le formulaire
@@ -85,8 +86,8 @@ def mdpOublie(request):
 
 
 @login_required(login_url="/utilisateur/connexion")
-@user_passes_test(verifSecretaire, login_url="/utilisateur/deconnexion")
-def creerEtudiant(request):
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
+def creer_etudiant(request):
     # Si POST, on traite le formulaire
     if request.method == 'POST':
         form = CreerEtudiant(request.POST)
@@ -95,26 +96,29 @@ def creerEtudiant(request):
             prenom = request.POST.get('prenom', '')
             nom = request.POST.get('nom', '')
             numero = request.POST.get('numero', '')
+            id_promotion = request.POST.get('promotion', '')
+            promotion = get_object_or_404(Promotion, pk=id_promotion)
             # password = User.objects.make_random_password()
             email = numero + "@parisnanterre.fr"
             password = 'azerty'
             try:
                 user = User.objects.create_user(username=numero, password=password, first_name=prenom, last_name=nom,
                                                 email=email)
-                Utilisateur.objects.create(user=user, role="Etudiant")
-                return HttpResponseRedirect("Bien vu")
+                util = Utilisateur.objects.create(user=user, role="Etudiant")
+                PromotionEtudiants.objects.create(etudiant=util, promotion=promotion)
+                messages.success(request, "Ètudiant crée et affecter à une promotion")
             except:
                 messages.error(request, "Numéro étudiant indisponible")
-
+            return HttpResponseRedirect(reverse('liste_etudiant'))
     # Si GET, on affiche la page pour remplir le formulaire
     else:
         form = CreerEtudiant()
-    return render(request, 'utilisateur/creerEtudiant.html', {'form': form})
+    return render(request, 'utilisateur/creer_etudiant.html', {'form': form})
 
 
 @login_required(login_url="/utilisateur/connexion")
-@user_passes_test(verifSecretaire, login_url="/utilisateur/deconnexion")
-def creerProfesseur(request):
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
+def creer_professeur(request):
     # Si POST, on traite le formulaire
     if request.method == 'POST':
         form = CreerProfesseur(request.POST)
@@ -129,12 +133,63 @@ def creerProfesseur(request):
                 user = User.objects.create_user(username=email, password=password, first_name=prenom, last_name=nom,
                                                 email=email)
                 Utilisateur.objects.create(user=user, role="Professeur")
-                return HttpResponseRedirect("Bien vu")
+                messages.success(request, "Professeur crée avec succès !")
             except:
                 messages.error(request, "Email indisponible")
-
+            return HttpResponseRedirect(reverse("liste_professeur"))
     # Si GET, on affiche la page pour remplir le formulaire
     else:
         form = CreerProfesseur()
+    return render(request, 'utilisateur/creer_professeur.html', {'form': form})
 
-    return render(request, 'utilisateur/creerProfesseur.html', {'form': form})
+
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
+def liste_etudiant(request):
+    liste = PromotionEtudiants.objects.all()
+    return render(request, 'utilisateur/liste_etudiant.html', {'liste': liste})
+
+
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
+def modifier_etudiant(request, id_utilisateur):
+    etudiant = get_object_or_404(Utilisateur, pk=id_utilisateur)
+    etudiant_promotion = PromotionEtudiants.objects.get(etudiant=id_utilisateur)
+    form = CreerEtudiant(data={'prenom': etudiant.user.first_name, 'nom': etudiant.user.last_name,
+                               'numero': etudiant.user.username, 'promotion': etudiant_promotion.promotion})
+    if request.method == 'POST':
+        form = CreerEtudiant(request.POST)
+        if form.is_valid():
+            try:
+                form.save(id_utilisateur)
+                messages.success(request, "La modification a été faites avec succès !")
+            except:
+                messages.error(request, "Erreur dans le formulaire !")
+        return HttpResponseRedirect(reverse('liste_etudiant'))
+    else:
+        return render(request, 'utilisateur/modifier_etudiant.html', {'form': form, 'etudiant': etudiant})
+
+
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
+def liste_professeur(request):
+    liste = Utilisateur.objects.filter(role="Professeur")
+    return render(request, 'utilisateur/liste_professeur.html', {'liste': liste})
+
+
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
+def modifier_prof(request, id_professeur):
+    prof = get_object_or_404(User, pk=id_professeur)
+    form = CreerProfesseur(data={'prenom': prof.first_name, 'nom': prof.last_name, 'email': prof.username})
+    if request.method == 'POST':
+        form = CreerProfesseur(request.POST)
+        if form.is_valid():
+            try:
+                form.save(id_professeur)
+                messages.success(request, "Le professeur a bien été modifé !")
+            except:
+                messages.error(request, "Erreur dans le formulaire !")
+        return HttpResponseRedirect(reverse('liste_professeur'))
+    else:
+        return render(request, 'utilisateur/modifier_professeur.html', {'form': form, 'prof': prof})

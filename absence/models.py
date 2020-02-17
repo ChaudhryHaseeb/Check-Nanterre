@@ -27,14 +27,10 @@ class Promotion(models.Model):
     ]
     nom_promotion = models.CharField(max_length=10, choices=NOM_PROMOTION, default="null",)
     annee_filiere = models.CharField(max_length=10, default=str(timezone.now().year) + "-" + str(timezone.now().year+1))
-    status_promotion = models.CharField(
-        max_length=3,
-        choices=STATUS_PROMOTION,
-        default="Null",
-    )
+    status_promotion = models.CharField(max_length=3, choices=STATUS_PROMOTION, default="Null")
 
     def __str__(self):
-        return str(self.nom_promotion) + " " + str(self.STATUS_PROMOTION) + " " + str(self.annee_filiere)
+        return str(self.nom_promotion) + " " + str(self.status_promotion) + " " + str(self.annee_filiere)
 
 
 class PromotionEtudiants(models.Model):
@@ -43,7 +39,7 @@ class PromotionEtudiants(models.Model):
 
     def __str__(self):
         return str(self.etudiant.user.last_name) + ", " + str(self.promotion.nom_promotion) + " " +\
-               str(self.promotion.STATUS_PROMOTION) + " " + str(self.promotion.annee_filiere)
+               str(self.promotion.status_promotion) + " " + str(self.promotion.annee_filiere)
 
 
 class Matiere(models.Model):

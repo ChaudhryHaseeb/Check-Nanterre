@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1 class="ml-2 mt-3 pageheader-title"> Créer un étudiant</h1>
+    <h1 class="ml-2 mt-3 pageheader-title"> Modifier {{ etudiant.user.first_name.capitalize }} {{ etudiant.user.last_name.upper }}</h1>
     {% if messages %}
         {% for msg in messages %}
             <div class="alert alert-danger"><strong>{{msg}}</strong></div>
         {% endfor %}
     {% endif %}
-    <form action="/utilisateur/etudiant/creation" method="post" class="ml-5 mr-5 mb-5">
+    <form action="" method="post" class="ml-5 mr-5 mb-5">
         {% csrf_token %}
         {{ form }}
         <input type="submit" class="btn btn-primary mt-5" value="Valider">
