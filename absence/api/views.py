@@ -6,8 +6,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from absence.api.serializers import PromotionSerializer
-from absence.models import Promotion, PromotionEtudiants
+from absence.api.serializers import PromotionSerializer, AbsenceSeanceSerializer
+from absence.models import Promotion, PromotionEtudiants, AbsenceEtudiants, AbsenceSeance
 from utilisateur.api.serializers import UtilisateurSerializer
 from utilisateur.models import Utilisateur
 
@@ -39,5 +39,23 @@ def liste_etudiant_dans_promotion(request, id):
         for obj in promoEtu:
             listeEtu.append(obj.etudiant)
         serializer = UtilisateurSerializer(listeEtu, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET', ])
+@permission_classes([IsAuthenticated])
+def absence_etudiant_connecte(request):
+    try:
+        user = request.user
+        utilisateur = Utilisateur.objects.get(user=user)
+        absenceEtu = AbsenceEtudiants.objects.filter(etudiant=utilisateur)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        listeAbsSeance = []
+        for obj in absenceEtu:
+            listeAbsSeance.append(AbsenceSeance.objects.get(absence_seance=obj.absence_etudiant))
+        serializer = AbsenceSeanceSerializer(listeAbsSeance, many=True)
         return Response(serializer.data)
 
