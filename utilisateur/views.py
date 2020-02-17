@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
+from django.urls import reverse
 
 from absence.models import Promotion, PromotionEtudiants
 from utilisateur.forms import CreerEtudiant, CreerProfesseur, ConnexionForm, MdpOublie
@@ -58,7 +59,7 @@ def connexion(request):
         return render(request, 'utilisateur/connexion.html', {'form': form})
 
 
-def mdpOublie(request):
+def mdp_oublie(request):
     if request.method == 'POST':
         form = MdpOublie(request.POST)
         # Check validite du formulaire
@@ -75,7 +76,7 @@ def mdpOublie(request):
                           'Bonjour, voici votre nouveau mot de passe pour le site Check_Nanterre : ' + password,
                           'check.nanterre@gmail.com',
                           [email])
-                return HttpResponseRedirect('/utilisateur/connexion')
+                return HttpResponseRedirect(reverse('connexion'))
             except:
                 messages.error(request, "Email inconnu")
     # Si GET, on affiche la page pour remplir le formulaire
