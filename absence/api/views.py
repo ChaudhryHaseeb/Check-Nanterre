@@ -41,4 +41,3 @@ def liste_etudiant_dans_promotion(request, id):
         serializer = UtilisateurSerializer(listeEtu, many=True)
         return Response(serializer.data)
 
-

@@ -11,7 +11,7 @@ from utilisateur.models import Utilisateur
 
 
 # Permet de récupérer l'utilisateur associé à un token
-@api_view(['GET', ])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_connecte(request):
     try:
@@ -24,7 +24,7 @@ def user_connecte(request):
         return Response(serializer.data)
 
 
-@api_view(['PUT',])
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def user_modifier_mdp(request):
     try:
@@ -42,7 +42,7 @@ def user_modifier_mdp(request):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['PUT',])
+@api_view(['PUT'])
 def user_reset_mdp(request):
     try:
         user = User.objects.get(email=request.data["email"])
