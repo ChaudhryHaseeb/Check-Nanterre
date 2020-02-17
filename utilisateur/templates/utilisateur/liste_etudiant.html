@@ -7,11 +7,10 @@
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="page-header">
-                        <h2 class="pageheader-title">La liste des matières</h2>
+                        <h2 class="pageheader-title">La liste des étudiants</h2>
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <!-- ============================================================== -->
                 <!-- data table  -->
@@ -19,8 +18,9 @@
                 <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-9">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="mb-0">Les matières</h5>
-                            <p>Vous pouvez consulter les absences pour une matière en cliquant dessus.</p>
+                            <a href="{% url 'creer_etudiant' %}" class="btn btn-success" role="button" style="float:right">Créer un étudiant</a>
+                            <h5 class="mb-0">Les étudiants</h5>
+                            <p>Cliquez sur un étudiant pour pouvoir le modifier.</p>
                         </div>
                         <div class="card-body">
                             {% if messages %}
@@ -37,19 +37,21 @@
                                        style="width:100%">
                                     <thead>
                                     <tr>
-                                        <th>Nom matière</th>
-                                        <th>Modifier</th>
-                                        <th>Supprimer</th>
+                                        <th>Nom et prénom</th>
+                                        <th>Numéro étudiant</th>
+                                        <th>Mail</th>
+                                        <th>Promotion</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for matiere in matieres %}
+                                    {% for etudiant in liste %}
                                         <tr>
-                                            <td>{{ matiere.titre }}</td>
-                                            <td><a href="{% url 'modifier_matiere' matiere.id %}"
-                                                   class="btn btn-success" role="button" >Modifier</a>
+                                            <td>
+                                                <a href="{% url 'modifier_etudiant' etudiant.etudiant.id %}">{{ etudiant.etudiant.user.last_name.upper }} {{ etudiant.etudiant.user.first_name.capitalize }}</a>
                                             </td>
-                                            <td><a href="{% url 'supprimer_matiere' matiere.id %}" class="btn btn-danger" role="button">Supprimer</a></td>
+                                            <td>{{ etudiant.etudiant.user.username }}</td>
+                                            <td>{{ etudiant.etudiant.user.email }}</td>
+                                            <td>{{ etudiant.promotion }}</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -66,6 +68,8 @@
     <script>
         $(document).ready(function () {
             $('#tableMat').DataTable({
+                dom: 'Bfrtip',
+                buttons: ["csv", "pdf", "excel", "colvis"],
                 "language":
                     {
                         "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"

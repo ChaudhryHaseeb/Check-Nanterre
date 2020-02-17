@@ -1,5 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+
+from absence.models import Promotion, PromotionEtudiants
+from utilisateur.models import Utilisateur
 
 
 class ConnexionForm(forms.Form):
@@ -20,8 +24,21 @@ class CreerEtudiant(forms.Form):
                                                         'placeholder': 'Nom'}))
 
     numero = forms.CharField(label=('Numéro étudiant'), max_length=8, required=False,
-                             widget=forms.TextInput(attrs={'class': 'form-control', 'pattern': '[0-9]+$',
+                             widget=forms.TextInput(attrs={'class': 'form-control', 'pattern': '[0-9]{8}',
                                                            'placeholder': 'Numéro étudiant'}))
+    promotion = forms.ModelChoiceField(queryset=Promotion.objects.all(), label=('Promotion'), required=True,
+                                     widget=forms.Select(attrs={'class': 'form-control'}))
+
+    def save(self, id_utilisateur):
+        etudiant = get_object_or_404(Utilisateur, pk=id_utilisateur)
+        user = User.objects.get(username=etudiant.user.username, first_name=etudiant.user.first_name, last_name=etudiant.user.last_name)
+        etudiant_promotion = PromotionEtudiants.objects.get(etudiant=id_utilisateur)
+        user.first_name = self.cleaned_data['prenom']
+        user.last_name = self.cleaned_data['nom']
+        user.username = self.cleaned_data['numero']
+        etudiant_promotion.promotion = self.cleaned_data['promotion']
+        user.save()
+        etudiant_promotion.save()
 
 
 class CreerProfesseur(forms.Form):
@@ -34,3 +51,11 @@ class CreerProfesseur(forms.Form):
 
     email = forms.EmailField(label=('Email'), widget=forms.EmailInput(attrs={'class': 'form-control',
                                                                               'placeholder': 'Email'}))
+
+    def save(self, id_professeur):
+        prof = get_object_or_404(User, pk=id_professeur)
+        user = User.objects.get(username=prof.username, first_name=prof.first_name, last_name=prof.last_name)
+        user.first_name = self.cleaned_data['prenom']
+        user.last_name = self.cleaned_data['nom']
+        user.username = self.cleaned_data['email']
+        user.save()

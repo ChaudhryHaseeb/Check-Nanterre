@@ -7,11 +7,10 @@
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="page-header">
-                        <h2 class="pageheader-title">La liste des matières</h2>
+                        <h2 class="pageheader-title">La liste des professeurs</h2>
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <!-- ============================================================== -->
                 <!-- data table  -->
@@ -19,8 +18,9 @@
                 <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-9">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="mb-0">Les matières</h5>
-                            <p>Vous pouvez consulter les absences pour une matière en cliquant dessus.</p>
+                            <a href="{% url 'creer_professeur' %}" class="btn btn-success" role="button" style="float:right">Créer un professeur</a>
+                            <h5 class="mb-0">Les professeurs</h5>
+                            <p>Cliquez sur un professeur pour pouvoir le modifier.</p>
                         </div>
                         <div class="card-body">
                             {% if messages %}
@@ -37,19 +37,19 @@
                                        style="width:100%">
                                     <thead>
                                     <tr>
-                                        <th>Nom matière</th>
-                                        <th>Modifier</th>
-                                        <th>Supprimer</th>
+                                        <th>Nom</th>
+                                        <th>Prénom</th>
+                                        <th>Mail</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for matiere in matieres %}
+                                    {% for prof in liste %}
                                         <tr>
-                                            <td>{{ matiere.titre }}</td>
-                                            <td><a href="{% url 'modifier_matiere' matiere.id %}"
-                                                   class="btn btn-success" role="button" >Modifier</a>
+                                            <td>
+                                                <a href="{% url 'modifier_professeur' prof.user.id %}"> {{ prof.user.last_name.upper }}</a>
                                             </td>
-                                            <td><a href="{% url 'supprimer_matiere' matiere.id %}" class="btn btn-danger" role="button">Supprimer</a></td>
+                                            <td> <a href="{% url 'modifier_professeur' prof.user.id %}"> {{ prof.user.first_name.capitalize }}</a></td>
+                                            <td><a href="{% url 'modifier_professeur' prof.user.id %}"> {{ prof.user.username }}</a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -66,6 +66,8 @@
     <script>
         $(document).ready(function () {
             $('#tableMat').DataTable({
+                dom: 'Bfrtip',
+                buttons: ["csv", "pdf", "excel", "colvis"],
                 "language":
                     {
                         "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"

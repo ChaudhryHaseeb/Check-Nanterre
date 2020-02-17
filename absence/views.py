@@ -6,11 +6,11 @@ from django.urls import reverse
 
 from absence.forms import CreationMatiere, ModifierMatiere
 from absence.models import Matiere
-from utilisateur.views import verifSecretaire
+from utilisateur.views import verif_secretaire
 
 
 @login_required(login_url="/utilisateur/connexion")
-@user_passes_test(verifSecretaire, login_url="/utilisateur/deconnexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
 def creer_matiere(request):
     if request.method == 'POST':
         form = CreationMatiere(request.POST)
@@ -28,14 +28,14 @@ def creer_matiere(request):
 
 
 @login_required(login_url="/utilisateur/connexion")
-@user_passes_test(verifSecretaire, login_url="/utilisateur/deconnexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
 def liste_matiere(request):
     matieres = Matiere.objects.all()
     return render(request, 'liste_matiere.html', {'matieres': matieres})
 
 
 @login_required(login_url="/utilisateur/connexion")
-@user_passes_test(verifSecretaire, login_url="/utilisateur/deconnexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
 def modifier_matiere(request, id_matiere):
     matiere = get_object_or_404(Matiere, pk=id_matiere)
     form = ModifierMatiere(data={'titre': matiere.titre})
@@ -52,6 +52,8 @@ def modifier_matiere(request, id_matiere):
         return render(request, 'modifier_matiere.html', {'form': form, 'matiere': matiere})
 
 
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
 def supprimer_matiere(request, id_matiere):
     matiere = get_object_or_404(Matiere, pk=id_matiere)
     try:
