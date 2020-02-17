@@ -59,3 +59,8 @@ class CreerProfesseur(forms.Form):
         user.last_name = self.cleaned_data['nom']
         user.username = self.cleaned_data['email']
         user.save()
+
+
+class MdpOublie(forms.Form):
+    email = forms.EmailField(label=('Email'), widget=forms.EmailInput(attrs={'class': 'form-control',
+                                                                             'placeholder': 'Email'}))
