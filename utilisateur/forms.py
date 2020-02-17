@@ -34,3 +34,8 @@ class CreerProfesseur(forms.Form):
 
     email = forms.EmailField(label=('Email'), widget=forms.EmailInput(attrs={'class': 'form-control',
                                                                               'placeholder': 'Email'}))
+
+
+class MdpOublie(forms.Form):
+    email = forms.EmailField(label=('Email'), widget=forms.EmailInput(attrs={'class': 'form-control',
+                                                                             'placeholder': 'Email'}))
