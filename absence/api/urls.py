@@ -12,4 +12,5 @@ urlpatterns = [
     path('etudiant/justification/<int:id>', absence_etudiant_justifier, name="absenceEtuJustifApi"),
     path('seance/creation', seance_creation, name="seanceCreationApi"),
     path('creation', absence_creation, name="absenceCreationApi"),
+    path('<int:id>', absence_etudiant_justifier, name="absenceModifierApi"),
 ]
