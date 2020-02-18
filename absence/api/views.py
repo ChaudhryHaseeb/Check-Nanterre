@@ -106,4 +106,28 @@ def seance_creation(request):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def absence_creation(request):
+    try:
+        util = Utilisateur.objects.get(user=request.user)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "POST":
+        if util.role != "Professeur":
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        data = {}
+        try:
+            absence = Absence.objects.create(absent=request.data["absence"], retard=request.data["retard"],
+                                             justification="")
+            seance = Seance.objects.get(id=request.data["id_seance"])
+            AbsenceSeance.objects.create(absence_seance=absence, seance=seance)
+            etu = Utilisateur.objects.get(id = request.data["id_etudiant"])
+            AbsenceEtudiants.objects.create(absence_etudiant=absence, etudiant=etu)
+            data["success"] = "create successful"
+            return Response(data=data)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
