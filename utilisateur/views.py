@@ -41,7 +41,7 @@ def connexion(request):
             if user:  # si l'objet retourne n'est pas None
                 if Utilisateur.objects.get(user=user).role == 'Secretaire':
                     login(request, user)
-                    return render(request, 'index.html')
+                    return HttpResponseRedirect(reverse('index'))
                 else:
                     messages.error(request, "Seul les secretaire peuvent se connecter")
             else:
@@ -49,7 +49,7 @@ def connexion(request):
     else:
         form = ConnexionForm()
     if request.user.is_authenticated:
-        return render(request, 'index.html')
+        return HttpResponseRedirect(reverse('index'))
     else:
         return render(request, 'utilisateur/connexion.html', {'form': form})
 
