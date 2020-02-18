@@ -93,7 +93,7 @@ class Absence(models.Model):
 
     absent = models.BooleanField(default=False)
     retard = models.IntegerField(default=0)
-    justification = models.CharField(max_length=255)
+    justification = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return str(self.absent)
