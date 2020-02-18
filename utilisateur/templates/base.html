@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static "assets/vendor/bootstrap/css/bootstrap.min.css" %}">
-    <link rel="stylesheet" href="{% static "/assets/vendor/fonts/circular-std/style.css" %}">
+    <link rel="stylesheet" href="{% static "assets/vendor/fonts/circular-std/style.css" %}">
     <link rel="stylesheet" href="{% static "assets/libs/css/style.css" %}">
     <link rel="stylesheet" href="{% static "assets/vendor/fonts/fontawesome/css/fontawesome-all.css" %}">
 
@@ -16,8 +16,7 @@
     <link rel="stylesheet" type="text/css" href="{% static "assets/vendor/datatables/css/dataTables.bootstrap4.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "assets/vendor/datatables/css/buttons.bootstrap4.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "assets/vendor/datatables/css/select.bootstrap4.css" %}">
-    <link rel="stylesheet" type="text/css"
-          href="{% static "assets/vendor/datatables/css/fixedHeader.bootstrap4.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "assets/vendor/datatables/css/fixedHeader.bootstrap4.css" %}">
 
     <title>Check Nanterre</title>
 </head>
@@ -95,7 +94,7 @@
                             <div id="submenu-2" class="collapse submenu" style="">
                                 <ul class="nav flex-column">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#">Master 2</a>
+                                        <a class="nav-link" href="{% url 'liste_promotion' %}">Liste des promotions</a>
                                     </li>
                                 </ul>
                             </div>
@@ -108,9 +107,6 @@
                                 <ul class="nav flex-column">
                                     <li class="nav-item">
                                         <a class="nav-link" href="{% url 'liste_matiere' %}">Afficher les matières</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{% url 'creer_matiere' %}">Créer une matière</a>
                                     </li>
                                 </ul>
                             </div>

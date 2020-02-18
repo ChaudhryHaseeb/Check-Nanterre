@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="page-header">
-                        <h2 class="pageheader-title">La liste des étudiants</h2>
+                        <h2 class="pageheader-title">La liste des étudiants dans la promotion {{ promotion }}</h2>
                     </div>
                 </div>
             </div>
@@ -18,9 +18,10 @@
                 <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-9">
                     <div class="card">
                         <div class="card-header">
-                            <a href="{% url 'creer_etudiant' %}" class="btn btn-success" role="button" style="float:right">Créer un étudiant</a>
-                            <h5 class="mb-0">Les étudiants</h5>
-                            <p>Cliquez sur un étudiant pour pouvoir le modifier.</p>
+                            <a href="{% url 'creer_etudiant' %}" class="btn btn-success" role="button"
+                               style="float:right">Créer une promotion</a>
+                            <h5 class="mb-0">Les étudiants dans {{ promotion }}</h5>
+                            <p>Cliquez sur un étudiant pour pouvoir ses absences.</p>
                         </div>
                         <div class="card-body">
                             {% if messages %}
@@ -40,18 +41,19 @@
                                         <th>Nom et prénom</th>
                                         <th>Numéro étudiant</th>
                                         <th>Mail</th>
+                                        <th>promotion</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for etudiant in liste %}
+                                    {% for promo in promo_etu %}
                                         <tr>
-                                            <td>
-                                                <a href="{% url 'modifier_etudiant' etudiant.user.id %}">{{ etudiant.user.last_name.upper }} {{ etudiant.user.first_name.capitalize }}</a>
-                                            </td>
-                                            <td>{{ etudiant.user.username }}</td>
-                                            <td>{{ etudiant.user.email }}</td>
+                                            <td>{{ promo.etudiant.user.last_name.upper }} {{ promo.etudiant.user.first_name.capitalize }}</td>
+                                            <td>{{ promo.etudiant.user.username }}</td>
+                                            <td>{{ promo.etudiant.user.email }}</td>
+                                            <td>{{ promo.promotion }}</td>
                                         </tr>
                                     {% endfor %}
+
                                     </tbody>
                                 </table>
                             </div>
@@ -73,7 +75,6 @@
                         "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
                     }
             });
-
         });
 
     </script>

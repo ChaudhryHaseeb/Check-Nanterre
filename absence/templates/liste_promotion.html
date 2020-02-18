@@ -7,10 +7,11 @@
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="page-header">
-                        <h2 class="pageheader-title">La liste des étudiants</h2>
+                        <h2 class="pageheader-title">La liste des promotions</h2>
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <!-- ============================================================== -->
                 <!-- data table  -->
@@ -18,9 +19,9 @@
                 <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-9">
                     <div class="card">
                         <div class="card-header">
-                            <a href="{% url 'creer_etudiant' %}" class="btn btn-success" role="button" style="float:right">Créer un étudiant</a>
-                            <h5 class="mb-0">Les étudiants</h5>
-                            <p>Cliquez sur un étudiant pour pouvoir le modifier.</p>
+                            <a href="{% url 'creer_promotion' %}" class="btn btn-success" role="button" style="float:right">Créer une promotion</a>
+                            <h5 class="mb-0">Les promotions</h5>
+                            <p>Vous pouvez consulter les promotions en cliquant dessus.</p>
                         </div>
                         <div class="card-body">
                             {% if messages %}
@@ -37,20 +38,14 @@
                                        style="width:100%">
                                     <thead>
                                     <tr>
-                                        <th>Nom et prénom</th>
-                                        <th>Numéro étudiant</th>
-                                        <th>Mail</th>
+                                        <th>Promotions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for etudiant in liste %}
+                                    {% for promo in promotions %}
                                         <tr>
-                                            <td>
-                                                <a href="{% url 'modifier_etudiant' etudiant.user.id %}">{{ etudiant.user.last_name.upper }} {{ etudiant.user.first_name.capitalize }}</a>
+                                            <td><a href="{% url 'promotion_contenu' promo.id %}"> {{ promo.nom_promotion }} {{ promo.status_promotion }} {{ promo.annee_filiere }}</a>
                                             </td>
-                                            <td>{{ etudiant.user.username }}</td>
-                                            <td>{{ etudiant.user.email }}</td>
-                                        </tr>
                                     {% endfor %}
                                     </tbody>
                                 </table>
@@ -66,8 +61,6 @@
     <script>
         $(document).ready(function () {
             $('#tableMat').DataTable({
-                dom: 'Bfrtip',
-                buttons: ["csv", "pdf", "excel", "colvis"],
                 "language":
                     {
                         "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"

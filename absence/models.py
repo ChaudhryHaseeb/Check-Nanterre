@@ -5,29 +5,29 @@ from utilisateur.models import Utilisateur
 
 
 class Promotion(models.Model):
-    Licence1 = 'L1'
-    Licence2 = 'L2'
-    Licence3 = 'L3'
-    Master1 = 'M1'
-    Master2 = 'M2'
+    Licence1 = 'Licence 1'
+    Licence2 = 'Licence 2'
+    Licence3 = 'Licence 3'
+    Master1 = 'Master 1'
+    Master2 = 'Master 2'
     NOM_PROMOTION = [
-        (Licence1, 'Licence 1'),
-        (Licence2, 'Licence 2'),
-        (Licence3, 'Licence 3'),
-        (Master1, 'Master 1'),
-        (Master2, 'Master 2'),
+        (Licence1, 'L1'),
+        (Licence2, 'L2'),
+        (Licence3, 'L3'),
+        (Master1, 'M1'),
+        (Master2, 'M2'),
     ]
-    Classique = 'cla'
-    Apprentissage = 'app'
-    Mixte = 'mxt'
+    Classique = 'Classique'
+    Apprentissage = 'Apprentissage'
+    Mixte = 'Mixte'
     STATUS_PROMOTION = [
-        (Classique, 'Classique'),
-        (Apprentissage, 'Apprentissage'),
-        (Mixte, 'Mixte'),
+        (Classique, 'CLA'),
+        (Apprentissage, 'APP'),
+        (Mixte, 'MXT'),
     ]
     nom_promotion = models.CharField(max_length=10, choices=NOM_PROMOTION, default="null",)
     annee_filiere = models.CharField(max_length=10, default=str(timezone.now().year) + "-" + str(timezone.now().year+1))
-    status_promotion = models.CharField(max_length=3, choices=STATUS_PROMOTION, default="Null")
+    status_promotion = models.CharField(max_length=13, choices=STATUS_PROMOTION, default="Null")
 
     def __str__(self):
         return str(self.nom_promotion) + " " + str(self.status_promotion) + " " + str(self.annee_filiere)

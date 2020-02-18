@@ -3,8 +3,6 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-
-# Create your views here.
 from django.urls import reverse
 
 from absence.models import Promotion, PromotionEtudiants
@@ -28,11 +26,8 @@ def verif_secretaire(user):
 @login_required(login_url="/utilisateur/connexion")
 @user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
 def index(request):
-    # send_mail('Check_Nanterre : Mail test',
-    #          'Mail envoyé depuis Django',
-    #          'check.nanterre@gmail.com',
-    #          ['haseeb.chaudhry@hotmail.fr'])
-    return render(request, 'index.html', {})
+    promotions = Promotion.objects.all()
+    return render(request, 'index.html', {'promotions': promotions})
 
 
 def connexion(request):
@@ -146,22 +141,23 @@ def creer_professeur(request):
 @login_required(login_url="/utilisateur/connexion")
 @user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
 def liste_etudiant(request):
-    liste = PromotionEtudiants.objects.all()
+    liste = Utilisateur.objects.filter(role="Etudiant")
     return render(request, 'utilisateur/liste_etudiant.html', {'liste': liste})
 
 
 @login_required(login_url="/utilisateur/connexion")
 @user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
 def modifier_etudiant(request, id_utilisateur):
-    etudiant = get_object_or_404(Utilisateur, pk=id_utilisateur)
-    etudiant_promotion = PromotionEtudiants.objects.get(etudiant=id_utilisateur)
+    user = get_object_or_404(User, pk=id_utilisateur)
+    etudiant = Utilisateur.objects.get(user=user)
+    etudiant_promotion = PromotionEtudiants.objects.get(etudiant=etudiant.id)
     form = CreerEtudiant(data={'prenom': etudiant.user.first_name, 'nom': etudiant.user.last_name,
                                'numero': etudiant.user.username, 'promotion': etudiant_promotion.promotion})
     if request.method == 'POST':
         form = CreerEtudiant(request.POST)
         if form.is_valid():
             try:
-                form.save(id_utilisateur)
+                form.save(etudiant.id)
                 messages.success(request, "La modification a été faites avec succès !")
             except:
                 messages.error(request, "Erreur dans le formulaire !")

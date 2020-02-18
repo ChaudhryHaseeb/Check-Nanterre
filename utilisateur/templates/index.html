@@ -1,48 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="dashboard-ecommerce">
-                <div class="container-fluid dashboard-content ">
-                    <!-- ============================================================== -->
-                    <!-- pageheader  -->
-                    <!-- ============================================================== -->
-                    <div class="row">
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div class="page-header">
-                                <h2 class="pageheader-title">Menu principal</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- end pageheader  -->
-                    <!-- ============================================================== -->
-                    <div class="ecommerce-widget">
-
-
-                        <div class="row">
-                            <!-- ============================================================== -->
-                            <!-- début raccourcis promotions  -->
-                            <!-- ============================================================== -->
-                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
-                                <div class="card border-3 border-top border-top-primary">
-                                    <div class="card-body">
-                                        <h5 class="text-muted">Licence 3 classique</h5>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
-                                <div class="card border-3 border-top border-top-primary">
-                                    <div class="card-body">
-                                        <h5 class="text-muted">Licence 3 Apprentissage</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <!-- ============================================================== -->
+            <!-- pageheader  -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">Menu principal</h2>
                     </div>
                 </div>
-</div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end pageheader  -->
+            <!-- ============================================================== -->
+            <div class="ecommerce-widget">
+
+
+                <div class="row">
+                    <!-- ============================================================== -->
+                    <!-- début raccourcis promotions  -->
+                    <!-- ============================================================== -->
+                    {% for promotion in promotions %}
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+                            <div class="card border-3 border-top border-top-primary">
+                                <div class="card-body">
+                                    <h5 class="text-muted"><a href="{% url 'promotion_contenu' promotion.id %}">{{ promotion.nom_promotion }} {{ promotion.status_promotion }} {{ promotion.annee_filiere }}</a></h5>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
-                            <!-- ============================================================== -->
-                            <!-- fin raccourcis promotions  -->
-                            <!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- fin raccourcis promotions  -->
+<!-- ============================================================== -->
