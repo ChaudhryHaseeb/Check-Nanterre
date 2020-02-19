@@ -160,7 +160,7 @@ def absence_professeur_update(request):
 
 @api_view(['PUT', ])
 @permission_classes([IsAuthenticated])
-def absence_etudiant_justifier(request, id):
+def absence_modifier(request, id):
     try:
         abs = Absence.objects.get(id=id)
         util = Utilisateur.objects.get(user=request.user)
