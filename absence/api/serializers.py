@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from absence.models import Promotion, Absence, Seance, AbsenceSeance
+from absence.models import Promotion, Absence, Seance, AbsenceSeance, AbsenceEtudiants
+from utilisateur.api.serializers import UtilisateurSerializer
 
 
 class PromotionSerializer(serializers.ModelSerializer):
@@ -28,3 +29,12 @@ class AbsenceSeanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = AbsenceSeance
         fields = ('id', 'seance', 'absence_seance')
+
+
+class AbsenceEtudiantsSerializer(serializers.ModelSerializer):
+    etudiant = UtilisateurSerializer()
+    absence_etudiant = AbsenceSerializer()
+
+    class Meta:
+        model = AbsenceEtudiants
+        fields = ('id', 'etudiant', 'absence_etudiant')

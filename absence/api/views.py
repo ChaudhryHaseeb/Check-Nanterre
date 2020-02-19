@@ -7,7 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
-from absence.api.serializers import PromotionSerializer, AbsenceSeanceSerializer, SeanceSerializer
+from absence.api.serializers import PromotionSerializer, AbsenceSeanceSerializer, SeanceSerializer, \
+    AbsenceEtudiantsSerializer
 from absence.models import Promotion, PromotionEtudiants, AbsenceEtudiants, AbsenceSeance, Absence, Seance, \
     SeancePromotion, SeanceProfesseur, SeanceMatiere, Matiere
 from utilisateur.api.serializers import UtilisateurSerializer
@@ -201,8 +202,7 @@ def list_seance_prof(request):
 
 @api_view(['GET', ])
 @permission_classes([IsAuthenticated])
-@renderer_classes([JSONRenderer])
-def list_presence_seance(request, id):
+def list_etudiant_seance(request, id):
     try:
         util = Utilisateur.objects.get(user=request.user)
         seance = Seance.objects.get(id=id)
@@ -216,8 +216,28 @@ def list_presence_seance(request, id):
         if util.role != "Professeur":
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         listeEtu = []
-        content = ''
         for obj in promoEtu:
-            content = {'nom': obj.etudiant.user.first_name}
-        #content = {'user_count': '23'}
-        return Response(str(content))
+            listeEtu.append(obj.etudiant)
+        serializer = UtilisateurSerializer(listeEtu, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET', ])
+@permission_classes([IsAuthenticated])
+def list_etudiant_absent_seance(request, id):
+    try:
+        util = Utilisateur.objects.get(user=request.user)
+        seance = Seance.objects.get(id=id)
+        absenceSeance = AbsenceSeance.objects.filter(seance=seance)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        if util.role != "Professeur":
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        listeAbs = []
+        for obj in absenceSeance:
+            listeAbs.append(AbsenceEtudiants.objects.get(absence_etudiant=obj.absence_seance))
+
+        serializer = AbsenceEtudiantsSerializer(listeAbs, many=True)
+        return Response(serializer.data)
