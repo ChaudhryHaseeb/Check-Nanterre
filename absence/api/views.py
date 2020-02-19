@@ -2,8 +2,9 @@
 
 # Permet de récupérer l'utilisateur associé à un token
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
 from absence.api.serializers import PromotionSerializer, AbsenceSeanceSerializer, SeanceSerializer
@@ -196,3 +197,27 @@ def list_seance_prof(request):
             listeSeance.append(obj.seance_professeur)
         serializer = SeanceSerializer(listeSeance, many=True)
         return Response(serializer.data)
+
+
+@api_view(['GET', ])
+@permission_classes([IsAuthenticated])
+@renderer_classes([JSONRenderer])
+def list_presence_seance(request, id):
+    try:
+        util = Utilisateur.objects.get(user=request.user)
+        seance = Seance.objects.get(id=id)
+        seancePromo = SeancePromotion.objects.get(seance_promotion=seance)
+        promo = Promotion.objects.get(id=seancePromo.promotion.id)
+        promoEtu = PromotionEtudiants.objects.all().filter(promotion=promo)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        if util.role != "Professeur":
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        listeEtu = []
+        content = ''
+        for obj in promoEtu:
+            content = {'nom': obj.etudiant.user.first_name}
+        #content = {'user_count': '23'}
+        return Response(str(content))
