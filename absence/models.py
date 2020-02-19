@@ -66,9 +66,9 @@ class MatierePromotion(models.Model):
 
 
 class Seance(models.Model):
-    date_seance = models.DateTimeField(null=True, blank=False)
-    heure_deb = models.TimeField(null=True, blank=True)
-    heure_fin = models.TimeField(null=True, blank=True)
+    date_seance = models.DateField(null=False, blank=False, default=timezone.now())
+    heure_deb = models.TimeField(null=False, blank=False, default=timezone.datetime.strftime(timezone.now(), "%H:%M"))
+    heure_fin = models.TimeField(null=False, blank=False, default=timezone.datetime.strftime(timezone.now(), "%H:%M"))
 
     def __str__(self):
         return str(self.date_seance) + " " + str(self.heure_deb) + str(self.heure_fin)

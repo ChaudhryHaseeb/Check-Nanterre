@@ -44,8 +44,8 @@ admin.site.register(MatierePromotion, MatierePromotionAdmin)
 
 
 class SeanceAdmin(admin.ModelAdmin):
-    fields = ['date_seance', 'heure_deb','heure_fin']
-    list_display = ('date_seance', 'heure_deb','heure_fin')
+    fields = ['date_seance', 'heure_deb', 'heure_fin']
+    list_display = ('date_seance', 'heure_deb', 'heure_fin')
 
 
 admin.site.register(Seance, SeanceAdmin)

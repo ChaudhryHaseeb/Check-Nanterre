@@ -1,9 +1,10 @@
+import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-
+from django.utils import timezone
 from absence.forms import CreationMatiere, CreationPromotion
 from absence.models import Matiere, Promotion, PromotionEtudiants
 from utilisateur.views import verif_secretaire
