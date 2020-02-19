@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from absence.api.serializers import PromotionSerializer, AbsenceSeanceSerializer
+from absence.api.serializers import PromotionSerializer, AbsenceSeanceSerializer, SeanceSerializer
 from absence.models import Promotion, PromotionEtudiants, AbsenceEtudiants, AbsenceSeance, Absence, Seance, \
     SeancePromotion, SeanceProfesseur, SeanceMatiere, Matiere
 from utilisateur.api.serializers import UtilisateurSerializer
@@ -177,3 +177,22 @@ def absence_etudiant_justifier(request, id):
             return Response(data=data)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', ])
+@permission_classes([IsAuthenticated])
+def list_seance_prof(request):
+    try:
+        util = Utilisateur.objects.get(user=request.user)
+        sceanceProf = SeanceProfesseur.objects.filter(professeur=util)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        if util.role != "Professeur":
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        listeSeance = []
+        for obj in sceanceProf:
+            listeSeance.append(obj.seance_professeur)
+        serializer = SeanceSerializer(listeSeance, many=True)
+        return Response(serializer.data)
