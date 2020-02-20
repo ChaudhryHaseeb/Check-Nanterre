@@ -8,9 +8,9 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
 from absence.api.serializers import PromotionSerializer, AbsenceSeanceSerializer, SeanceSerializer, \
-    AbsenceEtudiantsSerializer
+    AbsenceEtudiantsSerializer, MatiereSerializer
 from absence.models import Promotion, PromotionEtudiants, AbsenceEtudiants, AbsenceSeance, Absence, Seance, \
-    SeancePromotion, SeanceProfesseur, SeanceMatiere, Matiere
+    SeancePromotion, SeanceProfesseur, SeanceMatiere, Matiere, MatiereProfesseur
 from utilisateur.api.serializers import UtilisateurSerializer
 from utilisateur.models import Utilisateur
 
@@ -241,3 +241,18 @@ def list_etudiant_absent_seance(request, id):
 
         serializer = AbsenceEtudiantsSerializer(listeAbs, many=True)
         return Response(serializer.data)
+
+
+@api_view(['GET', ])
+@permission_classes([IsAuthenticated])
+def list_matiere(request):
+    try:
+        listeMatiere = Matiere.objects.all()
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+
+        serializer = MatiereSerializer(listeMatiere, many=True)
+        return Response(serializer.data)
+
