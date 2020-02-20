@@ -256,3 +256,17 @@ def list_matiere(request):
         serializer = MatiereSerializer(listeMatiere, many=True)
         return Response(serializer.data)
 
+
+@api_view(['GET', ])
+@permission_classes([IsAuthenticated])
+def seance_matiere(request, id):
+    try:
+        seance = Seance.objects.get(id=id)
+        seanceMatiere = SeanceMatiere.objects.get(seance_matiere=seance)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        serializer = MatiereSerializer(seanceMatiere.matiere)
+        return Response(serializer.data)
+
