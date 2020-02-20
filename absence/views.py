@@ -6,7 +6,8 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
 from absence.forms import CreationMatiere, CreationPromotion
-from absence.models import Matiere, Promotion, PromotionEtudiants
+from absence.models import Matiere, Promotion, PromotionEtudiants, Seance, Absence, AbsenceEtudiants, SeancePromotion, \
+    SeanceProfesseur, SeanceMatiere, AbsenceSeance
 from utilisateur.views import verif_secretaire
 
 
@@ -92,7 +93,38 @@ def liste_promotion(request):
     return render(request, 'liste_promotion.html', {'promotions': promotions})
 
 
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
 def promotion_contenu(request, id_promotion):
     promotion = get_object_or_404(Promotion, pk=id_promotion)
     promo_etu = PromotionEtudiants.objects.filter(promotion_id=id_promotion)
     return render(request, 'promotion_contenu.html', {'promo_etu': promo_etu, 'promotion': promotion})
+
+
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
+def liste_seance(request):
+    seances = SeancePromotion.objects.all()
+    return render(request, 'liste_seance.html', {'seances': seances})
+
+
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
+def liste_absence(request):
+    absences = AbsenceEtudiants.objects.all()
+    return render(request, 'liste_absence.html', {'absences': absences})
+
+
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
+def liste_seance_absence(request, id_seance):
+    seance = get_object_or_404(Seance, pk=id_seance)
+    promo = SeancePromotion.objects.get(seance_promotion=seance)
+    prof = SeanceProfesseur.objects.get(seance_professeur=seance)
+    matiere = SeanceMatiere.objects.get(seance_matiere=seance)
+    absent = AbsenceSeance.objects.filter(seance=seance)
+    etudiant_absent = []
+    for une_absence in absent:
+        etudiant_absent.append(AbsenceEtudiants.objects.get(absence_etudiant=une_absence.absence_seance))
+    return render(request, 'liste_seance_absence.html', {'seance': seance, 'promo': promo, 'prof': prof,
+                                                         'matiere': matiere, 'etudiant_absent': etudiant_absent})

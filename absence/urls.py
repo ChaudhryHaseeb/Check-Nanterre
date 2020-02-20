@@ -11,4 +11,7 @@ urlpatterns = [
     path('afficher/listePromotion/', views.liste_promotion, name='liste_promotion'),
     path('afficher/promotion/<int:id_promotion>/', views.promotion_contenu, name='promotion_contenu'),
     path('creation/promotion/', views.creer_promotion, name='creer_promotion'),
+    path('afficher/listeSeance/', views.liste_seance, name='liste_seance'),
+    path('afficher/listeAbsence/', views.liste_absence, name='liste_absence'),
+    path('afficher/listeSeanceAbsence/<int:id_seance>/', views.liste_seance_absence, name='liste_seance_absence'),
 ]

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">La liste de toutes les absences</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- ============================================================== -->
+                <!-- data table  -->
+                <!-- ============================================================== -->
+                <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-9">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Les absences</h5>
+                            <p>Vous pouvez consulter les details d'une absence en cliquant dessus.</p>
+                        </div>
+                        <div class="card-body">
+                            {% if messages %}
+                                {% for msg in messages %}
+                                    {% if msg.tags == "success" %}
+                                        <div class="alert alert-success"><strong>{{ msg }}</strong></div>
+                                    {% else %}
+                                        <div class="alert alert-danger"><strong>{{ msg }}</strong></div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            <div class="table-responsive">
+                                <table id="tableMat" class="table table-striped table-bordered second"
+                                       style="width:100%">
+                                    <thead>
+                                    <tr>
+                                        <th>Nom et Prénom</th>
+                                        <th>Absent</th>
+                                        <th>Retard</th>
+                                        <th>Justification</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for absence in absences %}
+                                        <tr>
+                                            <td>{{ absence.etudiant.user.last_name.upper }} {{ absence.etudiant.user.first_name.capitalize }}</td>
+                                            {% if absence.absence_etudiant.absent %}
+                                                <td>Oui</td>
+                                                <td>Non</td>
+                                            {% else %}
+                                                <td>Non</td>
+                                                <td>Oui, de {{ absence.absence_etudiant.retard }} min.</td>
+                                            {% endif %}
+                                            <td>{{ absence.absence_etudiant.justification }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#tableMat').DataTable({
+                "language":
+                    {
+                        "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
+                    }
+            });
+        });
+
+    </script>
+{% endblock %}
+

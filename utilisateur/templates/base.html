@@ -118,7 +118,7 @@
                             <div id="submenu-4" class="collapse submenu" style="">
                                 <ul class="nav flex-column">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="">Créer une seance</a>
+                                        <a class="nav-link" href="{% url 'liste_seance' %}">Afficher les séances</a>
                                     </li>
                                 </ul>
                             </div>
@@ -129,10 +129,7 @@
                             <div id="submenu-5" class="collapse submenu" style="">
                                 <ul class="nav flex-column">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="pages/general-table.html">General Tables</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="pages/data-tables.html">Data Tables</a>
+                                        <a class="nav-link" href="{% url 'liste_absence' %}">Afficher les absences</a>
                                     </li>
                                 </ul>
                             </div>
@@ -195,6 +192,7 @@
 <script src="https://cdn.datatables.net/rowgroup/1.0.4/js/dataTables.rowGroup.min.js"></script>
 <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
 <script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/date-uk.js"></script>
 
 </body>
 
