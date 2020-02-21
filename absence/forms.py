@@ -24,3 +24,5 @@ class CreationPromotion(forms.Form):
                                                            'placeholder': '2020-2021'}))
 
 
+class ImportFile(forms.Form):
+    file = forms.FileField(label='Choisissez un fichier')

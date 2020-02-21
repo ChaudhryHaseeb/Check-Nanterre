@@ -18,7 +18,7 @@
                 <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-9">
                     <div class="card">
                         <div class="card-header">
-                            <a href="" class="btn btn-primary" role="button" style="float:right">Importer des étudiants</a>
+                            <a href="{% url 'import_file' promotion.id %}" class="btn btn-primary" role="button" style="float:right">Importer des étudiants</a>
                             <h5 class="mb-0">Les étudiants dans {{ promotion }}</h5>
                             <p>Cliquez sur un étudiant pour pouvoir ses absences.</p>
                         </div>

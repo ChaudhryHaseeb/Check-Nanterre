@@ -15,4 +15,5 @@ urlpatterns = [
     path('afficher/listeSeanceAbsence/<int:id_seance>/', views.liste_seance_absence, name='liste_seance_absence'),
     path('afficher/Absence/<int:id_absence>/', views.absence, name='absence'),
     path('afficher/listeEtudiantAbsence/<int:id_etudiant>/', views.liste_etudiant_absence, name='liste_etudiant_absence'),
+    path('import/<int:id_promotion>', views.import_file, name='import_file'),
 ]

@@ -1,10 +1,11 @@
-
+import csv
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from absence.forms import CreationMatiere, CreationPromotion
+from absence.forms import CreationMatiere, CreationPromotion, ImportFile
 from absence.models import Matiere, Promotion, PromotionEtudiants, Seance, AbsenceEtudiants, SeancePromotion, \
     SeanceProfesseur, SeanceMatiere, AbsenceSeance, Absence
 from utilisateur.models import Utilisateur
@@ -153,5 +154,42 @@ def liste_etudiant_absence(request, id_etudiant):
         seance = AbsenceSeance.objects.get(absence_seance=x.absence_etudiant)
         s.append(seance)
         liste.append(s)
-    print(liste)
     return render(request, 'liste_etudiant_absence.html', {'liste': liste, 'etudiant': etudiant})
+
+
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
+def import_file(request, id_promotion):
+    promo = get_object_or_404(Promotion, pk=id_promotion)
+    if request.method == 'POST':
+        form = ImportFile(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            save_csv(file)
+            password = "azerty"
+            with open('media/import.csv', 'r', encoding='ISO-8859-1', newline='') as f:
+                reader = csv.reader(f, delimiter=',')
+                for row in reader:
+                    try:
+                        user = User.objects.create_user(username=row[2], password=password, first_name=row[1],
+                                                        last_name=row[0], email=row[2]+"@parisnanterre.fr")
+                        util = Utilisateur.objects.create(user=user, role="Etudiant")
+                        messages.success(request, "L'étudiant {} {} a bien été crée.".format(row[0], row[1]))
+                    except:
+                        messages.error(request, "Erreur dans la création de l'étudiant {} {}".format(row[0], row[1]))
+                    try:
+                        PromotionEtudiants.objects.create(etudiant=util, promotion=promo)
+                        messages.success(request, "L'étudiant {} {} a bien été affecté à la promotion.".format(row[0], row[1]))
+                    except:
+                        messages.error(request, "Erreur dans l'affectation de l'étudiant {} {} à une promotion."
+                                       .format(row[0], row[1]))
+            return HttpResponseRedirect(reverse('promotion_contenu', args=[promo.id]))
+    else:
+        form = ImportFile()
+    return render(request, 'import.html', {'form': form})
+
+
+def save_csv(f):
+    with open('/vagrant/media/import.csv', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
