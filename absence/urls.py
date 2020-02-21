@@ -1,4 +1,3 @@
-from django.conf.urls import url
 from django.urls import path
 
 from . import views
@@ -14,4 +13,6 @@ urlpatterns = [
     path('afficher/listeSeance/', views.liste_seance, name='liste_seance'),
     path('afficher/listeAbsence/', views.liste_absence, name='liste_absence'),
     path('afficher/listeSeanceAbsence/<int:id_seance>/', views.liste_seance_absence, name='liste_seance_absence'),
+    path('afficher/Absence/<int:id_absence>/', views.absence, name='absence'),
+    path('afficher/listeEtudiantAbsence/<int:id_etudiant>/', views.liste_etudiant_absence, name='liste_etudiant_absence'),
 ]

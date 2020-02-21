@@ -20,7 +20,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0">Les absences</h5>
-                            <p>Vous pouvez consulter les details d'une absence en cliquant dessus.</p>
+                            <p>Vous pouvez consulter les absences d'un étudiant en cliquant dessus</p>
                         </div>
                         <div class="card-body">
                             {% if messages %}
@@ -46,7 +46,7 @@
                                     <tbody>
                                     {% for absence in absences %}
                                         <tr>
-                                            <td>{{ absence.etudiant.user.last_name.upper }} {{ absence.etudiant.user.first_name.capitalize }}</td>
+                                            <td><a href="{% url 'liste_etudiant_absence' absence.etudiant.id %}"> {{ absence.etudiant.user.last_name.upper }} {{ absence.etudiant.user.first_name.capitalize }}</a></td>
                                             {% if absence.absence_etudiant.absent %}
                                                 <td>Oui</td>
                                                 <td>Non</td>
@@ -71,6 +71,8 @@
     <script>
         $(document).ready(function () {
             $('#tableMat').DataTable({
+                dom: 'Bfrtip',
+                buttons: ["csv", "pdf", "excel", "colvis"],
                 "language":
                     {
                         "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"

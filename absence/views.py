@@ -1,13 +1,13 @@
-import datetime
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from django.utils import timezone
 from absence.forms import CreationMatiere, CreationPromotion
-from absence.models import Matiere, Promotion, PromotionEtudiants, Seance, Absence, AbsenceEtudiants, SeancePromotion, \
-    SeanceProfesseur, SeanceMatiere, AbsenceSeance
+from absence.models import Matiere, Promotion, PromotionEtudiants, Seance, AbsenceEtudiants, SeancePromotion, \
+    SeanceProfesseur, SeanceMatiere, AbsenceSeance, Absence
+from utilisateur.models import Utilisateur
 from utilisateur.views import verif_secretaire
 
 
@@ -128,3 +128,30 @@ def liste_seance_absence(request, id_seance):
         etudiant_absent.append(AbsenceEtudiants.objects.get(absence_etudiant=une_absence.absence_seance))
     return render(request, 'liste_seance_absence.html', {'seance': seance, 'promo': promo, 'prof': prof,
                                                          'matiere': matiere, 'etudiant_absent': etudiant_absent})
+
+
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
+def absence(request, id_absence):
+    absence = get_object_or_404(Absence, pk=id_absence)
+    etudiant = AbsenceEtudiants.objects.get(absence_etudiant=absence)
+    seance = AbsenceSeance.objects.get(absence_seance=absence)
+    matiere = SeanceMatiere.objects.get(seance_matiere=seance.seance)
+    prof = SeanceProfesseur.objects.get(seance_professeur=seance.seance)
+    return render(request, 'absence.html', {'absence': absence, 'seance': seance, 'matiere': matiere, 'prof': prof,
+                                            'etudiant': etudiant})
+
+
+@login_required(login_url="/utilisateur/connexion")
+@user_passes_test(verif_secretaire, login_url="/utilisateur/deconnexion")
+def liste_etudiant_absence(request, id_etudiant):
+    etudiant = get_object_or_404(Utilisateur, pk=id_etudiant)
+    liste_abs = AbsenceEtudiants.objects.filter(etudiant=etudiant)
+    liste = []
+    for x in liste_abs:
+        s = []
+        seance = AbsenceSeance.objects.get(absence_seance=x.absence_etudiant)
+        s.append(seance)
+        liste.append(s)
+    print(liste)
+    return render(request, 'liste_etudiant_absence.html', {'liste': liste, 'etudiant': etudiant})

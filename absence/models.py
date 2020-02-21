@@ -90,10 +90,9 @@ class SeancePromotion(models.Model):
 
 
 class Absence(models.Model):
-
     absent = models.BooleanField(default=False)
     retard = models.IntegerField(default=0)
-    justification = models.CharField(max_length=255, null=True, blank=True)
+    justification = models.CharField(max_length=255, null=True, blank=True, default="Non justifiée")
 
     def __str__(self):
         return str(self.absent)

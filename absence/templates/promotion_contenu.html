@@ -18,8 +18,7 @@
                 <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-9">
                     <div class="card">
                         <div class="card-header">
-                            <a href="{% url 'creer_etudiant' %}" class="btn btn-success" role="button"
-                               style="float:right">Créer une promotion</a>
+                            <a href="" class="btn btn-primary" role="button" style="float:right">Importer des étudiants</a>
                             <h5 class="mb-0">Les étudiants dans {{ promotion }}</h5>
                             <p>Cliquez sur un étudiant pour pouvoir ses absences.</p>
                         </div>
@@ -47,7 +46,7 @@
                                     <tbody>
                                     {% for promo in promo_etu %}
                                         <tr>
-                                            <td>{{ promo.etudiant.user.last_name.upper }} {{ promo.etudiant.user.first_name.capitalize }}</td>
+                                            <td><a href="{% url 'liste_etudiant_absence' promo.etudiant.id %}">{{ promo.etudiant.user.last_name.upper }} {{ promo.etudiant.user.first_name.capitalize }}</a></td>
                                             <td>{{ promo.etudiant.user.username }}</td>
                                             <td>{{ promo.etudiant.user.email }}</td>
                                             <td>{{ promo.promotion }}</td>

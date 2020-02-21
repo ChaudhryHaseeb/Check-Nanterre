@@ -7,7 +7,8 @@
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="page-header">
-                        <h2 class="pageheader-title">La liste des matières</h2>
+                        <h2 class="pageheader-title">La liste de toutes les absences
+                            de {{ etudiant.user.first_name.capitalize }} {{ etudiant.user.last_name.upper }}</h2>
                     </div>
                 </div>
             </div>
@@ -19,9 +20,8 @@
                 <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-9">
                     <div class="card">
                         <div class="card-header">
-                            <a href="{% url 'creer_matiere' %}" class="btn btn-success" role="button" style="float:right">Créer une matière</a>
-                            <h5 class="mb-0">Les matières</h5>
-                            <p>Vous pouvez consulter les absences pour une matière en cliquant dessus.</p>
+                            <h5 class="mb-0">Les absences</h5>
+                            <p>Vous pouvez consulter les absences d'un étudiant en cliquant dessus</p>
                         </div>
                         <div class="card-body">
                             {% if messages %}
@@ -38,19 +38,30 @@
                                        style="width:100%">
                                     <thead>
                                     <tr>
-                                        <th>Nom matière</th>
-                                        <th>Modifier</th>
-                                        <th>Supprimer</th>
+                                        <th>Date</th>
+                                        <th>Heure début</th>
+                                        <th>Heure fin</th>
+                                        <th>Absent</th>
+                                        <th>Retard</th>
+                                        <th>Justification</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for matiere in matieres %}
+                                    {% for i in liste %}
                                         <tr>
-                                            <td>{{ matiere.titre }}</td>
-                                            <td><a href="{% url 'modifier_matiere' matiere.id %}"
-                                                   class="btn btn-success" role="button" >Modifier</a>
-                                            </td>
-                                            <td><a href="{% url 'supprimer_matiere' matiere.id %}" class="btn btn-danger" role="button">Supprimer</a></td>
+                                            {% for foo in i %}
+                                                <td><a href="{% url 'absence' foo.absence_seance.id %}">{{ foo.seance.date_seance }}</a></td>
+                                                <td><a href="{% url 'absence' foo.absence_seance.id %}">{{ foo.seance.heure_deb }}</a></td>
+                                                <td><a href="{% url 'absence' foo.absence_seance.id %}">{{ foo.seance.heure_fin }}</a></td>
+                                                {% if foo.absence_seance.absent %}
+                                                    <td><a href="{% url 'absence' foo.absence_seance.id %}">Oui</a></td>
+                                                    <td><a href="{% url 'absence' foo.absence_seance.id %}">Non</a></td>
+                                                {% else %}
+                                                    <td><a href="{% url 'absence' foo.absence_seance.id %}">Non</a></td>
+                                                    <td><a href="{% url 'absence' foo.absence_seance.id %}">Oui, de {{ foo.absence_seance.retard }} min.</a></td>
+                                                {% endif %}
+                                                <td><a href="{% url 'absence' foo.absence_seance.id %}">{{ foo.absence_seance.justification }}</a></td>
+                                            {% endfor %}
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -67,6 +78,8 @@
     <script>
         $(document).ready(function () {
             $('#tableMat').DataTable({
+                dom: 'Bfrtip',
+                buttons: ["csv", "pdf", "excel", "colvis"],
                 "language":
                     {
                         "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
