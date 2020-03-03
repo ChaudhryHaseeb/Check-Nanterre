@@ -23,7 +23,7 @@
 * Créez un secrétaire :
   - dans Authentification>Utilisateur pour le créer
   - Utilisateurs pour l'associer au rôle secrétaire
-* allez sur `localhost:8000/` et connectez-vous avec les identifiants créés précédemment et vous pourrez créer enseignants, promotions, étudiants et matières
+* allez sur `localhost:8000` et connectez-vous avec les identifiants créés précédemment et vous pourrez créer enseignants, promotions, étudiants et matières
   
 # Dépôt mobile associé
 
