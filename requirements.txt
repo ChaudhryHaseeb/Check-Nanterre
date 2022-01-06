@@ -2,6 +2,6 @@ Django>=3.0.1
 Djangorestframework==3.10.3
 Django-celery==3.2.2
 Django-celery-email==3.0.0
-Celery==4.0
+Celery==5.2.2
 Jinja2>=2.10.1
 psycopg2-binary==2.7.4
